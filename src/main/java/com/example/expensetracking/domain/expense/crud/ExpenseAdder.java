@@ -17,8 +17,8 @@ class ExpenseAdder {
     }
 
     ExpenseResponseDto addExpense(ExpenseRequestDto expenseRequestDto) {
-        Expense expense = expenseMapper.mapFromExpenseRequestToExpense(expenseRequestDto);
-        expenseRepository.save(expense);
-        return expenseMapper.mapFromExpenseToExpenseResponse(expense);
+        Expense expenseToSave = expenseMapper.mapFromExpenseRequestToExpense(expenseRequestDto);
+        Expense savedExpense = expenseRepository.save(expenseToSave);
+        return expenseMapper.mapFromExpenseToExpenseResponse(savedExpense);
     }
 }

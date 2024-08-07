@@ -35,4 +35,8 @@ public class ExpenseFacade {
     public void deleteExpense(Long id) {
         expenseDeleter.deleteById(id);
     }
+
+    public List<ExpenseResponseDto> getExpensesByCategoryId(Long categoryId) {
+        return expenseRetriever.getExpensesByCategoryId(categoryId);
+    }
 }

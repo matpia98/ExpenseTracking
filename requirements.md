@@ -8,15 +8,15 @@
 - Użytkownik musi używać ważnego tokena JWT do autoryzacji wszystkich chroniony ch endpointów API.
 
 **Zarządzanie wydatkami:**
-- Użytkownik może dodać nowy wydatek, podając kwotę, datę, opis i opcjonalnie kategorię.
+~~- Użytkownik może dodać nowy wydatek, podając kwotę, datę, opis i opcjonalnie kategorię.~~
 - Użytkownik może załączyć zdjęcie paragonu do wydatku.
-- Użytkownik może edytować istniejący wydatek.
-- Użytkownik może usunąć wydatek.
+- ~~Użytkownik może edytować istniejący wydatek.~~
+- ~~Użytkownik może usunąć wydatek.~~
 - Użytkownik może przeglądać listę swoich wydatków z opcjami filtrowania i sortowania.
 
 **Zarządzanie kategoriami:**
-- Użytkownik może tworzyć własne kategorie wydatków.
-- Użytkownik może edytować nazwy istniejących kategorii.
+- ~~Użytkownik może tworzyć własne kategorie wydatków.~~
+- ~~Użytkownik może edytować nazwy istniejących kategorii.~~
 - Użytkownik może usuwać kategorie, jeśli nie są przypisane do żadnych wydatków.
 - Użytkownik może przypisać kategorię do wydatku podczas tworzenia lub edycji wydatku.
 

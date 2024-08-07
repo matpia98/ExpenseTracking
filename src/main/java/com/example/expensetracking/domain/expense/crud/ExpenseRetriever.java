@@ -32,4 +32,15 @@ class ExpenseRetriever {
                 .map(expenseMapper::mapFromExpenseToExpenseResponse)
                 .collect(Collectors.toList());
     }
+
+    List<ExpenseResponseDto> getExpensesByCategoryId(Long categoryId) {
+        List<Expense> expenses = expenseRepository.findAllByCategoryId(categoryId);
+        if (expenses.isEmpty()) {
+            throw new ExpenseNotFoundException("No expenses found");
+        }
+        return expenses.stream()
+                .map(expenseMapper::mapFromExpenseToExpenseResponse)
+                .collect(Collectors.toList());
+    }
+
 }

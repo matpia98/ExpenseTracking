@@ -18,6 +18,9 @@ class ExpenseUpdater {
 
     ExpenseResponseDto updateExpense(Long id, ExpenseRequestDto expenseRequestDto) {
         Expense expense = expenseMapper.mapFromExpenseRequestToExpense(expenseRequestDto);
+        if (!expenseRepository.existsById(id)) {
+            throw new ExpenseNotFoundException("Expense with id " + id + " not found");
+        }
         Expense savedExpense = expenseRepository.save(expense);
         return expenseMapper.mapFromExpenseToExpenseResponse(savedExpense);
 
