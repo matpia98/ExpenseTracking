@@ -1,7 +1,7 @@
 package com.example.expensetracking.domain.expense.crud;
 
-import com.example.expensetracking.domain.expense.dto.ExpenseRequestDto;
-import com.example.expensetracking.domain.expense.dto.ExpenseResponseDto;
+import com.example.expensetracking.domain.expense.crud.dto.ExpenseRequestDto;
+import com.example.expensetracking.domain.expense.crud.dto.ExpenseResponseDto;
 
 import org.springframework.stereotype.Service;
 
@@ -17,8 +17,8 @@ class ExpenseAdder {
     }
 
     ExpenseResponseDto addExpense(ExpenseRequestDto expenseRequestDto) {
-        Expense expense = expenseMapper.mapFromExponseRequestToExponse(expenseRequestDto);
+        Expense expense = expenseMapper.mapFromExpenseRequestToExpense(expenseRequestDto);
         expenseRepository.save(expense);
-        return expenseMapper.mapFromExponseToExponseResponse(expense);
+        return expenseMapper.mapFromExpenseToExpenseResponse(expense);
     }
 }

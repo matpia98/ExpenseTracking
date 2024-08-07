@@ -1,23 +1,26 @@
 package com.example.expensetracking.domain.expense.crud;
 
-import com.example.expensetracking.domain.expense.dto.ExpenseResponseDto;
-import lombok.AllArgsConstructor;
+import com.example.expensetracking.domain.expense.crud.dto.ExpenseResponseDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
 class ExpenseRetriever {
 
     private final ExpenseRepository expenseRepository;
     private final ExpenseMapper expenseMapper;
 
+    ExpenseRetriever(ExpenseRepository expenseRepository, ExpenseMapper expenseMapper) {
+        this.expenseRepository = expenseRepository;
+        this.expenseMapper = expenseMapper;
+    }
+
     ExpenseResponseDto getExpenseById(Long id) {
         Expense expense = expenseRepository.findById(id)
                 .orElseThrow(() -> new ExpenseNotFoundException("Expense with id: " + id + " not found"));
-        return expenseMapper.mapFromExponseToExponseResponse(expense);
+        return expenseMapper.mapFromExpenseToExpenseResponse(expense);
     }
 
     List<ExpenseResponseDto> getAllExpenses() {
@@ -26,7 +29,7 @@ class ExpenseRetriever {
             throw new ExpenseNotFoundException("No expenses found");
         }
         return expenses.stream()
-                .map(expenseMapper::mapFromExponseToExponseResponse)
+                .map(expenseMapper::mapFromExpenseToExpenseResponse)
                 .collect(Collectors.toList());
     }
 }

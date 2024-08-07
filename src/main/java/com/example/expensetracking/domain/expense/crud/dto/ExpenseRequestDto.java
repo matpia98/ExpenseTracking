@@ -1,4 +1,4 @@
-package com.example.expensetracking.domain.expense.dto;
+package com.example.expensetracking.domain.expense.crud.dto;
 
 import lombok.Builder;
 
@@ -8,6 +8,7 @@ public record ExpenseRequestDto(
         String description,
         double amount,
         String category,
-        String date
+        String date,
+        Long categoryId
 ) {
 }

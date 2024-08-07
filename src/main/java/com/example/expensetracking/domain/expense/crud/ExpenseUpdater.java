@@ -1,21 +1,25 @@
 package com.example.expensetracking.domain.expense.crud;
 
-import com.example.expensetracking.domain.expense.dto.ExpenseRequestDto;
-import com.example.expensetracking.domain.expense.dto.ExpenseResponseDto;
-import lombok.AllArgsConstructor;
+import com.example.expensetracking.domain.expense.crud.dto.ExpenseRequestDto;
+import com.example.expensetracking.domain.expense.crud.dto.ExpenseResponseDto;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
 class ExpenseUpdater {
 
     private final ExpenseRepository expenseRepository;
     private final ExpenseMapper expenseMapper;
 
+    ExpenseUpdater(ExpenseRepository expenseRepository, ExpenseMapper expenseMapper) {
+        this.expenseRepository = expenseRepository;
+        this.expenseMapper = expenseMapper;
+    }
+
+
     ExpenseResponseDto updateExpense(Long id, ExpenseRequestDto expenseRequestDto) {
-        Expense expense = expenseMapper.mapFromExponseRequestToExponse(expenseRequestDto);
+        Expense expense = expenseMapper.mapFromExpenseRequestToExpense(expenseRequestDto);
         Expense savedExpense = expenseRepository.save(expense);
-        return expenseMapper.mapFromExponseToExponseResponse(savedExpense);
+        return expenseMapper.mapFromExpenseToExpenseResponse(savedExpense);
 
     }
 }

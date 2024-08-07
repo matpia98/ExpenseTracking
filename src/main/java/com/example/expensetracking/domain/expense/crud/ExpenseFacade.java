@@ -1,7 +1,7 @@
 package com.example.expensetracking.domain.expense.crud;
 
-import com.example.expensetracking.domain.expense.dto.ExpenseRequestDto;
-import com.example.expensetracking.domain.expense.dto.ExpenseResponseDto;
+import com.example.expensetracking.domain.expense.crud.dto.ExpenseRequestDto;
+import com.example.expensetracking.domain.expense.crud.dto.ExpenseResponseDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 

@@ -1,4 +1,4 @@
-package com.example.expensetracking.domain.expense.dto;
+package com.example.expensetracking.domain.expense.crud.dto;
 
 import lombok.Builder;
 
@@ -9,6 +9,7 @@ public record ExpenseResponseDto(
         String description,
         double amount,
         String category,
-        String date
+        String date,
+        Long categoryId
 ) {
 }

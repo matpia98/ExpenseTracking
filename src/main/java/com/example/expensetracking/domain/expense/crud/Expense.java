@@ -24,6 +24,7 @@ class Expense {
     private String description;
     private String category;
     private String date;
+    private Long categoryId;
 
     public Expense() {
 
