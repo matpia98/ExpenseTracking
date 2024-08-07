@@ -4,7 +4,7 @@ import com.example.expensetracking.domain.expense.crud.CategoryInfoProvider;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CategoryInfoProviderImpl implements CategoryInfoProvider {
+class CategoryInfoProviderImpl implements CategoryInfoProvider {
     private final CategoryRepository categoryRepository;
 
     public CategoryInfoProviderImpl(CategoryRepository categoryRepository) {
