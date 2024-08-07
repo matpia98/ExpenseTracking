@@ -1,6 +1,8 @@
 package com.example.expensetracking.infrastructure.expense.controller;
 
 import com.example.expensetracking.domain.expense.crud.dto.ExpenseResponseDto;
+import com.example.expensetracking.infrastructure.expense.controller.dto.CreateExpenseResponseDto;
+import com.example.expensetracking.infrastructure.expense.controller.dto.GetExpenseResponseDto;
 
 class ExpenseRestControllerMapper {
 

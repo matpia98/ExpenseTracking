@@ -1,4 +1,4 @@
-package com.example.expensetracking.infrastructure.expense.controller;
+package com.example.expensetracking.infrastructure.expense.controller.dto;
 
 import lombok.Builder;
 

@@ -3,6 +3,8 @@ package com.example.expensetracking.infrastructure.expense.controller;
 import com.example.expensetracking.domain.expense.crud.ExpenseFacade;
 import com.example.expensetracking.domain.expense.crud.dto.ExpenseRequestDto;
 import com.example.expensetracking.domain.expense.crud.dto.ExpenseResponseDto;
+import com.example.expensetracking.infrastructure.expense.controller.dto.CreateExpenseResponseDto;
+import com.example.expensetracking.infrastructure.expense.controller.dto.GetExpenseResponseDto;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +31,7 @@ class ExpenseRestController {
         return ResponseEntity.ok(getExpenseResponseDto);
     }
 
-    @PostMapping("/{expenseId}")
+    @PostMapping()
     ResponseEntity<CreateExpenseResponseDto> addExpense(@Valid @RequestBody ExpenseRequestDto request) {
         ExpenseResponseDto expenseResponseDto = expenseFacade.addExpense(request);
         CreateExpenseResponseDto createExpenseResponseDto = ExpenseRestControllerMapper.mapFromExpenseResponseDtoToCreateExpenseResponseDto(expenseResponseDto);
