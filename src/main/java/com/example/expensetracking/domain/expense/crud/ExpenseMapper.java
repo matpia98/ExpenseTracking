@@ -1,9 +1,10 @@
-// src/main/java/com/example/expensetracking/domain/expense/crud/ExpenseMapper.java
 package com.example.expensetracking.domain.expense.crud;
 
 import com.example.expensetracking.domain.expense.crud.dto.ExpenseRequestDto;
 import com.example.expensetracking.domain.expense.crud.dto.ExpenseResponseDto;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
 
 @Component
 class ExpenseMapper {
@@ -12,6 +13,9 @@ class ExpenseMapper {
                 .title(expenseRequestDto.title())
                 .description(expenseRequestDto.description())
                 .amount(expenseRequestDto.amount())
+                .category(expenseRequestDto.category())
+                .date(LocalDateTime.now().toString())
+                .categoryId(expenseRequestDto.categoryId())
                 .build();
     }
 
@@ -21,6 +25,9 @@ class ExpenseMapper {
                 .title(expense.getTitle())
                 .description(expense.getDescription())
                 .amount(expense.getAmount())
+                .category(expense.getCategory())
+                .date(expense.getDate())
+                .categoryId(expense.getCategoryId())
                 .build();
     }
 }

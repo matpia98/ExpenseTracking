@@ -4,11 +4,9 @@ import com.example.expensetracking.domain.expense.crud.dto.ExpenseRequestDto;
 import com.example.expensetracking.domain.expense.crud.dto.ExpenseResponseDto;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Component
 @AllArgsConstructor
 public class ExpenseFacade {
 

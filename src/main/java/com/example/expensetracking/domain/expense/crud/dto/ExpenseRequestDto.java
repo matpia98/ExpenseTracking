@@ -8,7 +8,6 @@ public record ExpenseRequestDto(
         String description,
         double amount,
         String category,
-        String date,
         Long categoryId
 ) {
 }
