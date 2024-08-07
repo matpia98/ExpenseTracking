@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Configuration;
 public class ExpenseFacadeConfiguration {
 
     @Bean
-    ExpenseFacade expenseFacade(ExpenseRepository expenseRepository) {
-        ExpenseMapper expenseMapper = new ExpenseMapper();
+    ExpenseFacade expenseFacade(ExpenseRepository expenseRepository, CategoryInfoProvider categoryInfoProvider) {
+        ExpenseMapper expenseMapper = new ExpenseMapper(categoryInfoProvider);
         ExpenseAdder expenseAdder = new ExpenseAdder(expenseRepository, expenseMapper);
         ExpenseRetriever expenseRetriever = new ExpenseRetriever(expenseRepository, expenseMapper);
         ExpenseDeleter expenseDeleter = new ExpenseDeleter(expenseRepository);

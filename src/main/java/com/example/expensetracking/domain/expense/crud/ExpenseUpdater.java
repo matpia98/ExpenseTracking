@@ -24,8 +24,8 @@ class ExpenseUpdater {
         expense.setTitle(expenseRequestDto.title());
         expense.setAmount(expenseRequestDto.amount());
         expense.setDescription(expenseRequestDto.description());
-        expense.setCategory(expenseRequestDto.category());
         expense.setDate(LocalDateTime.now().toString());
+        expense.setCategoryId(expenseRequestDto.categoryId());
 
         return expenseMapper.mapFromExpenseToExpenseResponse(expense);
 

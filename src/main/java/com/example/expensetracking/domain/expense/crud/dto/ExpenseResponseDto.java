@@ -8,8 +8,7 @@ public record ExpenseResponseDto(
         String title,
         String description,
         double amount,
-        String category,
         String date,
-        Long categoryId
-) {
-}
+        Long categoryId,
+        String categoryName
+) {}
