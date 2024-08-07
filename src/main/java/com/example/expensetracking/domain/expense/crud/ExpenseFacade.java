@@ -2,6 +2,7 @@ package com.example.expensetracking.domain.expense.crud;
 
 import com.example.expensetracking.domain.expense.crud.dto.ExpenseRequestDto;
 import com.example.expensetracking.domain.expense.crud.dto.ExpenseResponseDto;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -28,6 +29,7 @@ public class ExpenseFacade {
         return expenseRetriever.getExpenseById(id);
     }
 
+    @Transactional
     public ExpenseResponseDto updateExpense(Long id, ExpenseRequestDto expenseRequestDto) {
         return expenseUpdater.updateExpense(id, expenseRequestDto);
     }

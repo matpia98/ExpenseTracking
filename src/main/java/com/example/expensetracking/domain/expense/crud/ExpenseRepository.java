@@ -6,4 +6,5 @@ import java.util.List;
 
 interface ExpenseRepository extends JpaRepository<Expense, Long> {
     List<Expense> findAllByCategoryId(Long categoryId);
+    boolean existsByCategoryId(Long categoryId);
 }
