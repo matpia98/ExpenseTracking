@@ -1,0 +1,2 @@
+ALTER TABLE expense
+    ADD CONSTRAINT FK_EXPENSE_ON_CATEGORY FOREIGN KEY (category_id) REFERENCES category (id);
