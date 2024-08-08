@@ -7,6 +7,7 @@ import com.example.expensetracking.domain.crud.dto.ExpenseResponseDto;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @AllArgsConstructor
@@ -66,5 +67,9 @@ public class ExpenseTrackingCrudFacade {
     @Transactional
     public CategoryResponseDto updateCategory(Long id, CategoryRequestDto categoryRequestDto){
         return categoryUpdater.updateCategory(id, categoryRequestDto);
+    }
+
+    public List<ExpenseResponseDto> getExpensesBetweenDates(LocalDate startDate, LocalDate endDate) {
+        return expenseRetriever.getExpensesBetweenDates(startDate, endDate);
     }
 }

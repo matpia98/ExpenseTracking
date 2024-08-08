@@ -9,7 +9,7 @@ public record ExpenseResponseDto(
         Long id,
         String title,
         String description,
-        double amount,
+        Double amount,
         LocalDateTime date,
         Long categoryId,
         String categoryName

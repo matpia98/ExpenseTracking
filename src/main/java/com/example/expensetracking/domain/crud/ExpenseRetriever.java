@@ -3,6 +3,9 @@ package com.example.expensetracking.domain.crud;
 import com.example.expensetracking.domain.crud.dto.ExpenseResponseDto;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,4 +46,15 @@ class ExpenseRetriever {
                 .collect(Collectors.toList());
     }
 
+    List<ExpenseResponseDto> getExpensesBetweenDates(LocalDate startDate, LocalDate endDate) {
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.plusDays(1).atStartOfDay().minusNanos(1);
+        List<Expense> expenses = expenseRepository.findAllByDateBetween(startDateTime, endDateTime);
+        if (expenses.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return expenses.stream()
+                .map(expenseMapper::mapFromExpenseToExpenseResponse)
+                .collect(Collectors.toList());
+    }
 }
