@@ -1,9 +1,9 @@
-package com.example.expensetracking.infrastructure.crud.controller.dto;
+package com.example.expensetracking.infrastructure.crud.controller.expense.dto;
 
 import lombok.Builder;
 
 @Builder
-public record GetExpenseResponseDto(
+public record CreateExpenseResponseDto(
         Long id,
         String title,
         String description,
