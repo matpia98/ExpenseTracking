@@ -20,6 +20,7 @@ class ExpenseRestControllerMapper {
                 .amount(expenseResponseDto.amount())
                 .date(expenseResponseDto.date())
                 .categoryId(expenseResponseDto.categoryId())
+                .categoryName(expenseResponseDto.categoryName())
                 .build();
     }
 
@@ -31,6 +32,7 @@ class ExpenseRestControllerMapper {
                 .amount(expenseResponseDto.amount())
                 .date(expenseResponseDto.date())
                 .categoryId(expenseResponseDto.categoryId())
+                .categoryName(expenseResponseDto.categoryName())
                 .build();
     }
 
@@ -45,7 +47,8 @@ class ExpenseRestControllerMapper {
                 expense.description(),
                 expense.amount(),
                 expense.date(),
-                expense.categoryId()
+                expense.categoryId(),
+                expense.categoryName()
         );
     }
 

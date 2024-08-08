@@ -1,6 +1,5 @@
 package com.example.expensetracking.domain.crud;
 
-import com.example.expensetracking.domain.crud.Expense;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,6 +25,7 @@ class Category {
     private Long id;
     private String name;
 
+    @Getter
     @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<Expense> expenses = new ArrayList<>();
@@ -53,10 +53,4 @@ class Category {
         return this.expenses != null && !this.expenses.isEmpty();
     }
 
-    public List<Expense> getExpenses() {
-        if (this.expenses == null) {
-            this.expenses = new ArrayList<>();
-        }
-        return this.expenses;
-    }
 }

@@ -26,6 +26,7 @@ class ExpenseMapper {
                 .amount(expense.getAmount())
                 .date(expense.getDate())
                 .categoryId(expense.getCategory().getId())
+                .categoryName(expense.getCategory().getName())
                 .build();
     }
 }

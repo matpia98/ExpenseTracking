@@ -6,6 +6,7 @@ public record UpdateExpenseResponseDto(
         String description,
         double amount,
         String date,
-        Long categoryId
+        Long categoryId,
+        String categoryName
 ) {
 }

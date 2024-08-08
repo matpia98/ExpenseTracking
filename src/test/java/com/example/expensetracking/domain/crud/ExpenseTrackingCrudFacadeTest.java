@@ -11,7 +11,6 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.Assertions.catchThrowable;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ExpenseTrackingCrudFacadeTest {
@@ -44,6 +43,7 @@ class ExpenseTrackingCrudFacadeTest {
         assertThat(result.title()).isEqualTo("Test Expense");
         assertThat(result.amount()).isEqualTo(100.0);
         assertThat(result.categoryId()).isEqualTo(1L);
+        assertThat(result.categoryName()).isEqualTo("Food");
     }
 
     @Test
@@ -89,6 +89,7 @@ class ExpenseTrackingCrudFacadeTest {
         assertThat(result.title()).isEqualTo("Updated Expense");
         assertThat(result.amount()).isEqualTo(150.0);
         assertThat(result.categoryId()).isEqualTo(2L);
+        assertThat(result.categoryName()).isEqualTo("Transport");
     }
 
     @Test
