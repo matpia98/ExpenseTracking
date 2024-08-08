@@ -4,8 +4,6 @@ import com.example.expensetracking.domain.crud.dto.ExpenseRequestDto;
 import com.example.expensetracking.domain.crud.dto.ExpenseResponseDto;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 @Service
 class ExpenseUpdater {
 
@@ -27,7 +25,6 @@ class ExpenseUpdater {
         expense.setTitle(expenseRequestDto.title());
         expense.setAmount(expenseRequestDto.amount());
         expense.setDescription(expenseRequestDto.description());
-        expense.setDate(LocalDateTime.now().toString());
 
         Category category = categoryRepository.findById(expenseRequestDto.categoryId())
                 .orElseThrow(() -> new CategoryNotFoundException("Category with id " + expenseRequestDto.categoryId() + " not found"));

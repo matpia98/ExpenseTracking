@@ -14,7 +14,7 @@ class ExpenseMapper {
                 .title(expenseRequestDto.title())
                 .description(expenseRequestDto.description())
                 .amount(expenseRequestDto.amount())
-                .date(LocalDateTime.now().toString())
+                .date(LocalDateTime.now())
                 .build();
     }
 

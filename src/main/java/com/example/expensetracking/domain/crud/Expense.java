@@ -1,5 +1,6 @@
 package com.example.expensetracking.domain.crud;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -11,6 +12,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Builder
@@ -25,7 +28,8 @@ class Expense {
     private String title;
     private Double amount;
     private String description;
-    private String date;
+    @Column(name = "expense_date")
+    private LocalDateTime date;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
