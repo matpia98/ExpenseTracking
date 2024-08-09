@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.query.FluentQuery;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
@@ -44,6 +45,11 @@ class InMemoryExpenseRepository implements ExpenseRepository {
         return expenses.values().stream()
                 .anyMatch(expense -> expense.getCategory() != null &&
                         Objects.equals(expense.getCategory().getId(), categoryId));
+    }
+
+    @Override
+    public List<Expense> findAllByDateBetween(LocalDateTime startDate, LocalDateTime endDate) {
+        return null;
     }
 
     @Override
