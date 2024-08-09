@@ -4,7 +4,6 @@ import com.example.expensetracking.domain.crud.ExpenseTrackingCrudFacade;
 import com.example.expensetracking.domain.crud.dto.ExpenseResponseDto;
 import com.example.expensetracking.domain.reporting.dto.ReportDto;
 import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -32,7 +31,7 @@ public class ReportingFacade {
 
     public ReportDto generateReport(LocalDate startDate, LocalDate endDate) {
         if (startDate.isAfter(endDate)) {
-            throw new IllegalArgumentException("Start date cannot be after end date");
+            throw new InvalidDateRangeException("Start date cannot be after end date");
         }
         List<ExpenseResponseDto> allExpensesBetweenDates = crudFacade.getExpensesBetweenDates(startDate, endDate);
         return reportGenerator.generateReport(allExpensesBetweenDates, startDate, endDate);
