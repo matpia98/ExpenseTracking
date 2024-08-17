@@ -1,7 +1,6 @@
 package com.example.expensetracking.domain.budgeting;
 
-import com.example.expensetracking.domain.budgeting.Budget;
-import com.example.expensetracking.domain.budgeting.BudgetRepository;
+import com.example.expensetracking.domain.budgeting.dto.BudgetExpenseDto;
 import com.example.expensetracking.domain.budgeting.dto.BudgetSummaryDto;
 import com.example.expensetracking.domain.budgeting.dto.CategorySummary;
 import com.example.expensetracking.domain.crud.dto.ExpenseResponseDto;
@@ -28,25 +27,48 @@ class BudgetSummarizer {
         return budgets;
     }
 
-    List<BudgetSummaryDto> getBudgetSummaries(List<Budget> budgets, List<ExpenseResponseDto> expenses) {
+    List<BudgetSummaryDto> getBudgetSummaries(List<Budget> budgets) {
         return budgets.stream()
-                .map(budget -> getBudgetSummary(budget, expenses))
+                .map(this::getBudgetSummary)
                 .collect(Collectors.toList());
     }
 
-    private BudgetSummaryDto getBudgetSummary(Budget budget, List<ExpenseResponseDto> expenses) {
-        List<CategorySummary> categorySummaries = budget.getCategories().stream()
-                .map(category -> {
-                    BigDecimal spent = ExpenseCalculator.calculateSpentAmount(expenses, category.getName(), budget.getStartDate(), budget.getEndDate());
-                    return new CategorySummary(
-                            category.getName(),
-                            category.getBudgetLimit(),
-                            spent,
-                            category.getBudgetLimit().subtract(spent)
-                    );
-                })
+    private BudgetSummaryDto getBudgetSummary(Budget budget) {
+        BigDecimal spent = calculateSpentAmount(budget);
+        BigDecimal remaining = budget.getRemaining();
+        BigDecimal limit = spent.add(remaining);
+
+        CategorySummary categorySummary = new CategorySummary(
+                "Total",
+                limit,
+                spent,
+                remaining
+        );
+
+        List<BudgetExpenseDto> budgetExpenseDtos = budget.getExpenses().stream()
+                .map(this::mapToBudgetExpenseDto)
                 .collect(Collectors.toList());
 
-        return new BudgetSummaryDto(budget.getStartDate(), budget.getEndDate(), categorySummaries);
+        return new BudgetSummaryDto(
+                budget.getStartDate(),
+                budget.getEndDate(),
+                List.of(categorySummary),
+                budgetExpenseDtos
+        );
+    }
+
+    private BigDecimal calculateSpentAmount(Budget budget) {
+        return budget.getExpenses().stream()
+                .map(BudgetExpense::getAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    private BudgetExpenseDto mapToBudgetExpenseDto(BudgetExpense expense) {
+        return new BudgetExpenseDto(
+                expense.getId(),
+                expense.getTitle(),
+                expense.getAmount(),
+                expense.getDate()
+        );
     }
 }

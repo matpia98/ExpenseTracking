@@ -21,7 +21,6 @@ public class ExpenseTrackingCrudFacade {
     private final CategoryRetriever categoryRetriever;
     private final CategoryDeleter categoryDeleter;
     private final CategoryUpdater categoryUpdater;
-
     @Transactional
     public ExpenseResponseDto addExpense(ExpenseRequestDto expenseRequestDto) {
         return expenseAdder.addExpense(expenseRequestDto);

@@ -6,6 +6,8 @@ import java.util.List;
 public record BudgetSummaryDto(
         LocalDate startDate,
         LocalDate endDate,
-        List<CategorySummary> categorySummaries
+        List<CategorySummary> summary,
+        List<BudgetExpenseDto> expenses
+
 ) {
 }

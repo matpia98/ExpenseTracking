@@ -11,6 +11,8 @@ class BudgetingFacadeConfiguration {
     BudgetingFacade budgetingFacade(ExpenseTrackingCrudFacade crudFacade, BudgetRepository budgetRepository) {
         BudgetCreator budgetCreator = new BudgetCreator(budgetRepository);
         BudgetSummarizer budgetSummarizer = new BudgetSummarizer(budgetRepository);
-        return new BudgetingFacade(budgetCreator, budgetSummarizer, crudFacade);
+        BudgetExpenseAdder budgetExpenseAdder = new BudgetExpenseAdder(budgetRepository);
+        BudgetRetriever budgetRetriever = new BudgetRetriever(budgetRepository);
+        return new BudgetingFacade(budgetCreator, budgetSummarizer, budgetExpenseAdder, budgetRetriever, crudFacade);
     }
 }

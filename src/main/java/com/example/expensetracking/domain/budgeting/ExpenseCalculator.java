@@ -7,13 +7,10 @@ import java.time.LocalDate;
 import java.util.List;
 
 class ExpenseCalculator {
-    static BigDecimal calculateSpentAmount(List<ExpenseResponseDto> expenses, String categoryName, LocalDate startDate, LocalDate endDate) {
-        return BigDecimal.valueOf(
-                expenses.stream()
-                        .filter(expense -> expense.categoryName().equals(categoryName))
-                        .filter(expense -> !expense.date().toLocalDate().isBefore(startDate) && !expense.date().toLocalDate().isAfter(endDate))
-                        .mapToDouble(ExpenseResponseDto::amount)
-                        .sum()
-        );
+    static BigDecimal calculateSpentAmount(List<ExpenseResponseDto> expenses, LocalDate startDate, LocalDate endDate) {
+        return expenses.stream()
+                .filter(expense -> !expense.date().toLocalDate().isBefore(startDate) && !expense.date().toLocalDate().isAfter(endDate))
+                .map(expense -> BigDecimal.valueOf(expense.amount()))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

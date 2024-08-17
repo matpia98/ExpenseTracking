@@ -1,31 +1,27 @@
 package com.example.expensetracking.domain.budgeting;
 
 import com.example.expensetracking.domain.budgeting.dto.BudgetExpenseDto;
-import com.example.expensetracking.domain.budgeting.dto.BudgetRequestDto;
 import com.example.expensetracking.domain.budgeting.dto.BudgetResponseDto;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Service
-class BudgetCreator {
+class BudgetRetriever {
     private final BudgetRepository budgetRepository;
 
-    BudgetCreator(BudgetRepository budgetRepository) {
+    BudgetRetriever(BudgetRepository budgetRepository) {
         this.budgetRepository = budgetRepository;
     }
 
-    BudgetResponseDto createBudget(BudgetRequestDto requestDto) {
-        Budget budget = Budget.builder()
-                .startDate(requestDto.startDate())
-                .endDate(requestDto.endDate())
-                .spent(BigDecimal.ZERO)
-                .remaining(requestDto.initialAmount())
-                .build();
+    public BudgetResponseDto getBudgetById(Long budgetId) {
+        Budget budget = findBudgetById(budgetId);
+        return mapToBudgetResponseDto(budget);
+    }
 
-        Budget savedBudget = budgetRepository.save(budget);
-        return mapToBudgetResponseDto(savedBudget);
+    private Budget findBudgetById(Long budgetId) {
+        return budgetRepository.findById(budgetId)
+                .orElseThrow(() -> new BudgetNotFoundException("Budget with id " + budgetId + " not found"));
     }
 
     private BudgetResponseDto mapToBudgetResponseDto(Budget budget) {
