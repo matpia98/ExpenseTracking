@@ -1,6 +1,7 @@
 package com.example.expensetracking.infrastructure.reporting.error;
 
 import com.example.expensetracking.domain.reporting.InvalidDateRangeException;
+import com.example.expensetracking.domain.reporting.InvalidMonthException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -14,9 +15,9 @@ public class ReportingRestControllerAdvice {
     ResponseEntity<ReportErrorResponseDto> handleInvalidDateRangeException(InvalidDateRangeException ex) {
         ReportErrorResponseDto reportErrorResponseDto = new ReportErrorResponseDto(
                 ex.getMessage(),
-                HttpStatus.NOT_FOUND);
+                HttpStatus.BAD_REQUEST);
         return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
+                .status(HttpStatus.BAD_REQUEST)
                 .body(reportErrorResponseDto);
     }
 
@@ -28,6 +29,16 @@ public class ReportingRestControllerAdvice {
         );
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(errorResponse);
+    }
+
+    @ExceptionHandler(InvalidMonthException.class)
+    ResponseEntity<ReportErrorResponseDto> handleInvalidMonthException(InvalidMonthException ex) {
+        ReportErrorResponseDto reportErrorResponseDto = new ReportErrorResponseDto(
+                ex.getMessage(),
+                HttpStatus.BAD_REQUEST);
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(reportErrorResponseDto);
     }
 
 }

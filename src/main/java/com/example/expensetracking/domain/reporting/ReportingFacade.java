@@ -24,6 +24,7 @@ public class ReportingFacade {
     }
 
     public ReportDto generateMonthlyReport(int year, int month) {
+        validateMonth(month);
         LocalDate startOfMonth = LocalDate.of(year, month, 1);
         LocalDate endOfMonth = startOfMonth.with(TemporalAdjusters.lastDayOfMonth());
         return generateReport(startOfMonth, endOfMonth);
@@ -35,5 +36,11 @@ public class ReportingFacade {
         }
         List<ExpenseResponseDto> allExpensesBetweenDates = crudFacade.getExpensesBetweenDates(startDate, endDate);
         return reportGenerator.generateReport(allExpensesBetweenDates, startDate, endDate);
+    }
+
+    private void validateMonth(int month) {
+        if (month < 1 || month > 12) {
+            throw new InvalidMonthException("Month must be between 1 and 12");
+        }
     }
 }

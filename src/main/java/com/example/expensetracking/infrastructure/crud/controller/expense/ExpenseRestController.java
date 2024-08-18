@@ -60,6 +60,7 @@ class ExpenseRestController {
         return ResponseEntity.ok(createExpenseResponseDto);
     }
 
+    @GetMapping
     @Operation(summary = "Get all expenses", description = "Retrieves a list of all expenses")
     @ApiResponse(responseCode = "200", description = "Successfully retrieved all expenses")
     ResponseEntity<GetAllExpensesResponseDto> getAllExpenses() {

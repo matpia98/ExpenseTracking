@@ -45,8 +45,8 @@ class Category {
     }
 
     public void removeExpense(Expense expense) {
-            this.expenses.remove(expense);
-            expense.setCategory(null);
+        this.expenses.remove(expense);
+        expense.setCategory(null);
     }
 
     public boolean hasExpenses() {

@@ -16,7 +16,6 @@ class BudgetExpenseAdder {
         this.budgetRepository = budgetRepository;
     }
 
-    @Transactional
     public AddExpenseToBudgetResponseDto addExpenseToBudget(Long budgetId, ExpenseResponseDto expenseDto) {
         Budget budget = findBudgetById(budgetId);
 

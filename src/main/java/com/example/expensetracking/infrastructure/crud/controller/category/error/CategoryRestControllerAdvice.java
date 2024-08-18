@@ -1,5 +1,6 @@
 package com.example.expensetracking.infrastructure.crud.controller.category.error;
 
+import com.example.expensetracking.domain.crud.CategoryHasExpensesException;
 import com.example.expensetracking.domain.crud.CategoryNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,16 @@ public class CategoryRestControllerAdvice {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(categoryErrorResponseDto);
+    }
+
+    @ExceptionHandler(CategoryHasExpensesException.class)
+    ResponseEntity<CategoryErrorResponseDto> handleCategoryHasExpensesException(CategoryHasExpensesException ex) {
+        CategoryErrorResponseDto reportErrorResponseDto = new CategoryErrorResponseDto(
+                ex.getMessage(),
+                HttpStatus.CONFLICT);
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(reportErrorResponseDto);
     }
 
 }
