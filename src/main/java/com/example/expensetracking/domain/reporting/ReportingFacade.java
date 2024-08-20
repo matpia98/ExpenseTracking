@@ -5,6 +5,7 @@ import com.example.expensetracking.domain.crud.dto.ExpenseResponseDto;
 import com.example.expensetracking.domain.reporting.dto.ReportDto;
 import lombok.AllArgsConstructor;
 
+import java.time.Clock;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
@@ -15,10 +16,12 @@ public class ReportingFacade {
 
     private final ExpenseTrackingCrudFacade crudFacade;
     private final ReportGenerator reportGenerator;
+    private final Clock clock;
 
 
-    public ReportDto generateWeeklyReport(LocalDate date) {
-        LocalDate startOfWeek = date.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
+    public ReportDto generateWeeklyReport() {
+        LocalDate now = LocalDate.now(clock);
+        LocalDate startOfWeek = now.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
         LocalDate endOfWeek = startOfWeek.plusDays(6);
         return generateReport(startOfWeek, endOfWeek);
     }

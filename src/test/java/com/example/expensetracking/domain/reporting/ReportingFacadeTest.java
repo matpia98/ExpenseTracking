@@ -7,8 +7,11 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -25,13 +28,13 @@ class ReportingFacadeTest {
     @BeforeEach
     void setUp() {
         crudFacade = mock(ExpenseTrackingCrudFacade.class);
-        reportingFacade = new ReportingFacadeConfiguration().reportingFacade(crudFacade);
+        Clock clock = Clock.fixed(Instant.parse("2024-08-15T10:00:00Z"), ZoneId.systemDefault());
+        reportingFacade = new ReportingFacadeConfiguration().reportingFacade(crudFacade, clock);
     }
 
     @Test
     void should_generate_weekly_report() {
         // given
-        LocalDate date = LocalDate.of(2024, 8, 15);  // A Tuesday
         LocalDate startOfWeek = LocalDate.of(2024, 8, 12);  // Monday
         LocalDate endOfWeek = LocalDate.of(2024, 8, 18);  // Sunday
         List<ExpenseResponseDto> mockExpenses = Arrays.asList(
@@ -41,7 +44,7 @@ class ReportingFacadeTest {
         when(crudFacade.getExpensesBetweenDates(startOfWeek, endOfWeek)).thenReturn(mockExpenses);
 
         // when
-        ReportDto report = reportingFacade.generateWeeklyReport(date);
+        ReportDto report = reportingFacade.generateWeeklyReport();
 
         // then
         assertThat(report.startDate()).isEqualTo(startOfWeek.atStartOfDay());

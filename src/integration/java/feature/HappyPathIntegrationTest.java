@@ -72,7 +72,7 @@ class HappyPathIntegrationTest {
 
         // step 3. when I go to /reports/weekly, I can see a report with no expenses
         // given & when
-        ReportDto initialReport = webTestClient.get().uri("/reports/weekly?date={date}", LocalDate.now())
+        ReportDto initialReport = webTestClient.get().uri("/reports/weekly")
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(ReportDto.class)

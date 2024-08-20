@@ -30,10 +30,8 @@ public class ReportingController {
     @GetMapping("/weekly")
     @Operation(summary = "Generate weekly report", description = "Generates a report for the week containing the given date")
     @ApiResponse(responseCode = "200", description = "Successfully generated report")
-    public ResponseEntity<ReportDto> getWeeklyReport(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
-            @Parameter(description = "Any date within the desired week", example = "2024-08-08") LocalDate date) {
-        ReportDto report = reportingFacade.generateWeeklyReport(date);
+    public ResponseEntity<ReportDto> getWeeklyReport() {
+        ReportDto report = reportingFacade.generateWeeklyReport();
         return ResponseEntity.ok(report);
     }
 
