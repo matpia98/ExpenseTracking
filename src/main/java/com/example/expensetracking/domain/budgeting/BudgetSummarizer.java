@@ -19,8 +19,8 @@ class BudgetSummarizer {
         this.budgetRepository = budgetRepository;
     }
 
-    List<Budget> findActiveBudgets() {
-        List<Budget> budgets = budgetRepository.findAllByEndDateAfter(LocalDate.now());
+    List<Budget> findActiveBudgets(LocalDate currentDate) {
+        List<Budget> budgets = budgetRepository.findAllByEndDateAfter(currentDate);
         if (budgets.isEmpty()) {
             throw new NoBudgetsFoundException("No active budgets found");
         }

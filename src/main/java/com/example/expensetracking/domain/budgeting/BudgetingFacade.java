@@ -9,6 +9,8 @@ import com.example.expensetracking.domain.crud.dto.ExpenseResponseDto;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
+import java.time.Clock;
+import java.time.LocalDate;
 import java.util.List;
 
 @AllArgsConstructor
@@ -18,6 +20,7 @@ public class BudgetingFacade {
     private final BudgetExpenseAdder budgetExpenseAdder;
     private final BudgetRetriever budgetRetriever;
     private final ExpenseTrackingCrudFacade expenseTrackingCrudFacade;
+    private final Clock clock;
 
     public BudgetResponseDto createBudget(BudgetRequestDto requestDto) {
         if (requestDto.endDate().isBefore(requestDto.startDate())) {
@@ -33,7 +36,8 @@ public class BudgetingFacade {
     }
 
     public List<BudgetSummaryDto> summarizeActiveBudgets() {
-        List<Budget> activeBudgets = budgetSummarizer.findActiveBudgets();
+        LocalDate currentDate = LocalDate.now(clock);
+        List<Budget> activeBudgets = budgetSummarizer.findActiveBudgets(currentDate);
         return budgetSummarizer.getBudgetSummaries(activeBudgets);
     }
 
