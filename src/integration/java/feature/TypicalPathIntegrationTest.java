@@ -6,6 +6,7 @@ import com.example.expensetracking.domain.reporting.dto.ReportDto;
 import com.example.expensetracking.infrastructure.crud.controller.category.dto.GetAllCategoriesResponseDto;
 import com.example.expensetracking.infrastructure.crud.controller.category.dto.GetExpensesByCategoryResponseDto;
 import com.example.expensetracking.infrastructure.crud.controller.expense.dto.GetAllExpensesResponseDto;
+import com.example.expensetracking.infrastructure.loginandregister.controller.dto.JwtResponseDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -21,10 +22,11 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 @SpringBootTest(classes = ExpenseTrackingApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Testcontainers
-class HappyPathIntegrationTest {
+class TypicalPathIntegrationTest {
 
     @Container
     static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:15-alpine");
@@ -40,19 +42,78 @@ class HappyPathIntegrationTest {
     }
 
     @Test
-    void happyPathTest() {
-        // Step 1: when I go to /expenses, I can see no expenses
-        // given & when & then
+    void should_user_register_and_be_able_to_manage_expenses_budgets_and_reports() {
+        // Step 1: user tried to get JWT token by requesting POST /token with username=someUser, password=somePassword and system returned UNAUTHORIZED(401)
+        webTestClient.post().uri("/token")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue("""
+                        {
+                            "username": "someUser",
+                            "password": "somePassword"
+                        }
+                        """)
+                .exchange()
+                .expectStatus().isUnauthorized()
+                .expectBody()
+                .jsonPath("$.message").isEqualTo("Bad Credentials")
+                .jsonPath("$.status").isEqualTo("UNAUTHORIZED");
+
+        // Step 2: user made GET /offers with no jwt token and system returned UNAUTHORIZED(401)
         webTestClient.get().uri("/expenses")
+                .exchange()
+                .expectStatus().isUnauthorized();
+
+        // Step 3: step 5: user made POST /register with username=someUser, password=somePassword and system registered user with status CREATED(201)
+        webTestClient.post().uri("/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue("""
+                        {
+                            "username": "someUser",
+                            "password": "somePassword"
+                        }
+                        """)
+                .exchange()
+                .expectStatus().isCreated()
+                .expectBody()
+                .jsonPath("$.username").isEqualTo("someUser")
+                .jsonPath("$.created").isEqualTo(true)
+                .jsonPath("$.id").isNotEmpty();
+
+        // Step 4: user tried to get JWT token by requesting POST /token with username=someUser, password=somePassword and system returned OK(200) and jwttoken=AAAA.BBBB.CCC
+        // given, when, then
+        JwtResponseDto jwtResponse = webTestClient.post().uri("/token")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue("""
+                        {
+                            "username": "someUser",
+                            "password": "somePassword"
+                        }
+                        """)
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(JwtResponseDto.class)
+                .returnResult()
+                .getResponseBody();
+        String token = jwtResponse.token();
+
+        assertAll(
+                () -> assertThat(jwtResponse.username()).isEqualTo("someUser"),
+                () -> assertThat(token).matches("^[A-Za-z0-9-_]+?\\.[A-Za-z0-9-_]+?\\.[A-Za-z0-9-_]+$")
+        );
+
+        // Step 5: user made GET /expenses with header “Authorization: Bearer AAAA.BBBB.CCC” and system returned no expenses
+        webTestClient.get().uri("/expenses")
+                .header("Authorization", "Bearer " + token)
                 .exchange()
                 .expectStatus().isNotFound()
                 .expectBody()
                 .jsonPath("$.message").isEqualTo("No expenses found")
                 .jsonPath("$.status").isEqualTo("NOT_FOUND");
 
-        // Step 2: when I go to /categories, I can see list of 14 basic categories
+        // Step 6: user made GET /categories and system returned 14 categories
         // given & when
         GetAllCategoriesResponseDto categoriesResponse = webTestClient.get().uri("/categories")
+                .header("Authorization", "Bearer " + token)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(GetAllCategoriesResponseDto.class)
@@ -70,9 +131,10 @@ class HappyPathIntegrationTest {
                         "Gifts", "Savings", "Debt Payments", "Miscellaneous"
                 );
 
-        // step 3. when I go to /reports/weekly, I can see a report with no expenses
+        // step 7. user made GET /reports/weekly and system returned a report with no expenses
         // given & when
         ReportDto initialReport = webTestClient.get().uri("/reports/weekly")
+                .header("Authorization", "Bearer " + token)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(ReportDto.class)
@@ -84,9 +146,10 @@ class HappyPathIntegrationTest {
         assertThat(initialReport.categorySummaries()).isEmpty();
         assertThat(initialReport.topExpenses()).isEmpty();
 
-        // step 4. when I go to /reports/monthly, I can see a report with no expenses
+        // step 8. user made GET /reports/monthly/2024/8 and system returned a report with no expenses
         // given & when
         ReportDto initialMonthlyReport = webTestClient.get().uri("reports/monthly/{year}/{month}", 2024, 8)
+                .header("Authorization", "Bearer " + token)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(ReportDto.class)
@@ -98,10 +161,11 @@ class HappyPathIntegrationTest {
         assertThat(initialMonthlyReport.categorySummaries()).isEmpty();
         assertThat(initialMonthlyReport.topExpenses()).isEmpty();
 
-        // step 5. when I go to /reports/custom, I can see a report with no expenses
+        // step 9. user made GET /reports/custom?startDate=2024-08-01&endDate=2024-08-07 and system returned a report with no expenses
         // given & when
         ReportDto initialCustomReport = webTestClient.get().uri("/reports/custom?startDate={startDate}&endDate={endDate}",
                         LocalDate.now().minusDays(7), LocalDate.now())
+                .header("Authorization", "Bearer " + token)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(ReportDto.class)
@@ -113,9 +177,10 @@ class HappyPathIntegrationTest {
         assertThat(initialCustomReport.categorySummaries()).isEmpty();
         assertThat(initialCustomReport.topExpenses()).isEmpty();
 
-        // step 6. when I post to /expenses, I can see new expense with id 1
+        // step 10. user made POST /expenses with a new expense and system returned the new expense with id 1
         // given & when
         webTestClient.post().uri("/expenses")
+                .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue("""
                         {
@@ -136,17 +201,19 @@ class HappyPathIntegrationTest {
                 .jsonPath("$.categoryId").isEqualTo(1)
                 .jsonPath("$.categoryName").isEqualTo("Groceries");
 
-        // step 7. when I go to /categories/5, I can see the category Healthcare with id 5
+        // step 11. user made GET /categories/5 and system returned the category with id 5
         // given & when & then
         webTestClient.get().uri("/categories/5")
+                .header("Authorization", "Bearer " + token)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
                 .jsonPath("$.id").isEqualTo(5)
                 .jsonPath("$.name").isEqualTo("Healthcare");
 
-        // step 8: when I post to /expenses, I can see new expense with id 2
+        // step 12: user made POST /expenses with a new expense and system returned the new expense with id 2
         webTestClient.post().uri("/expenses")
+                .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue("""
                         {
@@ -167,8 +234,9 @@ class HappyPathIntegrationTest {
                 .jsonPath("$.categoryId").isEqualTo(7)
                 .jsonPath("$.categoryName").isEqualTo("Dining Out");
 
-        // step 9: when I go post to /expenses, I can see new expense with id 3
+        // step 13: user made POST /expenses with a new expense and system returned the new expense with id 3
         webTestClient.post().uri("/expenses")
+                .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue("""
                         {
@@ -189,10 +257,11 @@ class HappyPathIntegrationTest {
                 .jsonPath("$.categoryId").isEqualTo(7)
                 .jsonPath("$.categoryName").isEqualTo("Dining Out");
 
-        // step 10: when I go to /expenses, I can see 3 expenses
+        // step 14: user made GET /expenses and system returned 3 expenses
         // given & when
         GetAllExpensesResponseDto getThreeExpensesResponseDto = webTestClient.get()
                 .uri("/expenses")
+                .header("Authorization", "Bearer " + token)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(GetAllExpensesResponseDto.class)
@@ -208,10 +277,11 @@ class HappyPathIntegrationTest {
                 .extracting(ExpenseResponseDto::title)
                 .containsExactly("Groceries", "Dinner", "Breakfast");
 
-        // step 11: when I go to /categories/7/expenses, I can see 2 expenses
+        // step 15: user made GET /categories/7/expenses and system returned 2 expenses
         // given & when
         GetExpensesByCategoryResponseDto getTwoExpensesByCategoryResponseDto = webTestClient.get()
                 .uri("/categories/7/expenses")
+                .header("Authorization", "Bearer " + token)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(GetExpensesByCategoryResponseDto.class)
@@ -229,10 +299,11 @@ class HappyPathIntegrationTest {
                 .containsExactly("Dinner", "Breakfast");
 
 
-        // Step 12: when I POST to /budgets, I can see a new budget with id 1
+        // Step 16: user made POST /budgets with a new budget and system returned the new budget with id 1
         // given & when
         webTestClient.post().uri("/budgets")
                 .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization", "Bearer " + token)
                 .bodyValue("""
                         {
                             "startDate": "2024-08-17",
@@ -250,8 +321,9 @@ class HappyPathIntegrationTest {
                 .jsonPath("$.remaining").isEqualTo(1000.00)
                 .jsonPath("$.expenses").isEmpty();
 
-        // Step 13: when I go to /budgets, I can see the new budget
+        // Step 17: user made GET /budgets and system returned the budget with id 1
         webTestClient.get().uri("/budgets")
+                .header("Authorization", "Bearer " + token)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -265,8 +337,9 @@ class HappyPathIntegrationTest {
                 .jsonPath("$.activeBudgets[0].summary[0].remaining").isEqualTo(1000.00)
                 .jsonPath("$.activeBudgets[0].expenses").isEmpty();
 
-        // Step 14: when I PUT to /budgets/1/add-existing-expense/1, I can see the expense with id 1 added to the budget with id 1
+        // Step 18: user made PUT /budgets/1/add-existing-expense/1 and system returned the updated budget with id 1 with the added expense with id 1
         webTestClient.put().uri("/budgets/1/add-existing-expense/1")
+                .header("Authorization", "Bearer " + token)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -278,8 +351,9 @@ class HappyPathIntegrationTest {
                 .jsonPath("$.addedExpense.title").isEqualTo("Groceries")
                 .jsonPath("$.addedExpense.amount").isEqualTo(100.00);
 
-        // Step 15: when I go to /budgets, I can see the budget with the added expense
+        // Step 19: user made GET /budgets and system returned the budget with id 1 with the added expense with id 1
         webTestClient.get().uri("/budgets")
+                .header("Authorization", "Bearer " + token)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -290,8 +364,9 @@ class HappyPathIntegrationTest {
                 .jsonPath("$.activeBudgets[0].expenses[0].title").isEqualTo("Groceries")
                 .jsonPath("$.activeBudgets[0].expenses[0].amount").isEqualTo(100.00);
 
-        // Step 16: Add another existing expense to the budget
+        // Step 20: user made PUT /budgets/1/add-existing-expense/2 and system returned the updated budget with id 1 with the added expense with id 2
         webTestClient.put().uri("/budgets/1/add-existing-expense/2")
+                .header("Authorization", "Bearer " + token)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -303,8 +378,9 @@ class HappyPathIntegrationTest {
                 .jsonPath("$.addedExpense.title").isEqualTo("Dinner")
                 .jsonPath("$.addedExpense.amount").isEqualTo(50.00);
 
-        // Step 17: Get all budgets one more time to verify both expenses are included
+        // Step 21: user made GET /budgets and system returned the budget with id
         webTestClient.get().uri("/budgets")
+                .header("Authorization", "Bearer " + token)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -315,8 +391,9 @@ class HappyPathIntegrationTest {
                 .jsonPath("$.activeBudgets[0].expenses[1].title").isEqualTo("Dinner")
                 .jsonPath("$.activeBudgets[0].expenses[1].amount").isEqualTo(50.00);
 
-        // Step 18: Create a new budget for a different period
+        // Step 22: user made POST /budgets with a new budget and system returned the new budget with id 2
         webTestClient.post().uri("/budgets")
+                .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue("""
                         {
@@ -335,8 +412,9 @@ class HappyPathIntegrationTest {
                 .jsonPath("$.remaining").isEqualTo(1500.00)
                 .jsonPath("$.expenses").isEmpty();
 
-        // Step 19: Get all budgets to verify both budgets are returned
+        // Step 23: user made GET /budgets and system returned the budget with id 1 and 2
         webTestClient.get().uri("/budgets")
+                .header("Authorization", "Bearer " + token)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
