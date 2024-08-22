@@ -6,6 +6,7 @@ import com.example.expensetracking.domain.crud.dto.ExpenseRequestDto;
 import com.example.expensetracking.domain.crud.dto.ExpenseResponseDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.util.List;
 
@@ -21,8 +22,9 @@ class ExpenseTrackingCrudFacadeTest {
     @BeforeEach
     void setUp() {
         categoryRepository = new InMemoryCategoryRepository();
+        CurrencyConvertable currencyConvertable = Mockito.mock(CurrencyConvertable.class);
         ExpenseRepository expenseRepository = new InMemoryExpenseRepository(categoryRepository);
-        expenseTrackingCrudFacade = new ExpenseFacadeConfiguration().expenseFacade(expenseRepository, categoryRepository);
+        expenseTrackingCrudFacade = new ExpenseFacadeConfiguration().expenseFacade(expenseRepository, categoryRepository, currencyConvertable);
 
         // Add some initial categories
         categoryRepository.save(new Category("Food"));
@@ -32,7 +34,7 @@ class ExpenseTrackingCrudFacadeTest {
     @Test
     void should_add_expense() {
         // given
-        ExpenseRequestDto requestDto = new ExpenseRequestDto("Test Expense", "Description", 100.0, 1L);
+        ExpenseRequestDto requestDto = new ExpenseRequestDto("Test Expense", "Description", 100.0, 1L, null);
 
         // when
         ExpenseResponseDto result = expenseTrackingCrudFacade.addExpense(requestDto);
@@ -49,8 +51,8 @@ class ExpenseTrackingCrudFacadeTest {
     @Test
     void should_get_all_expenses() {
         // given
-        expenseTrackingCrudFacade.addExpense(new ExpenseRequestDto("Expense 1", "Description 1", 100.0, 1L));
-        expenseTrackingCrudFacade.addExpense(new ExpenseRequestDto("Expense 2", "Description 2", 200.0, 2L));
+        expenseTrackingCrudFacade.addExpense(new ExpenseRequestDto("Expense 1", "Description 1", 100.0, 1L, null));
+        expenseTrackingCrudFacade.addExpense(new ExpenseRequestDto("Expense 2", "Description 2", 200.0, 2L, null));
 
         // when
         List<ExpenseResponseDto> result = expenseTrackingCrudFacade.getAllExpenses();
@@ -63,7 +65,7 @@ class ExpenseTrackingCrudFacadeTest {
     @Test
     void should_get_expense_by_id() {
         // given
-        ExpenseResponseDto addedExpense = expenseTrackingCrudFacade.addExpense(new ExpenseRequestDto("Test Expense", "Description", 100.0, 1L));
+        ExpenseResponseDto addedExpense = expenseTrackingCrudFacade.addExpense(new ExpenseRequestDto("Test Expense", "Description", 100.0, 1L, null));
 
         // when
         ExpenseResponseDto result = expenseTrackingCrudFacade.getExpenseById(addedExpense.id());
@@ -77,8 +79,8 @@ class ExpenseTrackingCrudFacadeTest {
     @Test
     void should_update_expense() {
         // given
-        ExpenseResponseDto addedExpense = expenseTrackingCrudFacade.addExpense(new ExpenseRequestDto("Test Expense", "Description", 100.0, 1L));
-        ExpenseRequestDto updateDto = new ExpenseRequestDto("Updated Expense", "New Description", 150.0, 2L);
+        ExpenseResponseDto addedExpense = expenseTrackingCrudFacade.addExpense(new ExpenseRequestDto("Test Expense", "Description", 100.0, 1L, null));
+        ExpenseRequestDto updateDto = new ExpenseRequestDto("Updated Expense", "New Description", 150.0, 2L, null);
 
         // when
         ExpenseResponseDto result = expenseTrackingCrudFacade.updateExpense(addedExpense.id(), updateDto);
@@ -95,7 +97,7 @@ class ExpenseTrackingCrudFacadeTest {
     @Test
     void should_delete_expense() {
         // given
-        ExpenseResponseDto addedExpense = expenseTrackingCrudFacade.addExpense(new ExpenseRequestDto("Test Expense", "Description", 100.0, 1L));
+        ExpenseResponseDto addedExpense = expenseTrackingCrudFacade.addExpense(new ExpenseRequestDto("Test Expense", "Description", 100.0, 1L, null));
 
         // when
         expenseTrackingCrudFacade.deleteExpense(addedExpense.id());
@@ -108,9 +110,9 @@ class ExpenseTrackingCrudFacadeTest {
     void should_get_expenses_by_categoryId() {
         // given
         Long categoryId = 1L;
-        expenseTrackingCrudFacade.addExpense(new ExpenseRequestDto("Expense 1", "Description 1", 100.0, categoryId));
-        expenseTrackingCrudFacade.addExpense(new ExpenseRequestDto("Expense 2", "Description 2", 200.0, categoryId));
-        expenseTrackingCrudFacade.addExpense(new ExpenseRequestDto("Expense 3", "Description 3", 300.0, 2L));
+        expenseTrackingCrudFacade.addExpense(new ExpenseRequestDto("Expense 1", "Description 1", 100.0, categoryId, null));
+        expenseTrackingCrudFacade.addExpense(new ExpenseRequestDto("Expense 2", "Description 2", 200.0, categoryId, null));
+        expenseTrackingCrudFacade.addExpense(new ExpenseRequestDto("Expense 3", "Description 3", 300.0, 2L, null));
 
         // when
         List<ExpenseResponseDto> result = expenseTrackingCrudFacade.getExpensesByCategoryId(categoryId);
@@ -194,7 +196,7 @@ class ExpenseTrackingCrudFacadeTest {
     void should_throw_exception_when_deleting_category_with_expenses() {
         // given
         CategoryResponseDto addedCategory = expenseTrackingCrudFacade.addCategory(new CategoryRequestDto("Entertainment"));
-        expenseTrackingCrudFacade.addExpense(new ExpenseRequestDto("Test Expense", "Description", 100.0, addedCategory.id()));
+        expenseTrackingCrudFacade.addExpense(new ExpenseRequestDto("Test Expense", "Description", 100.0, addedCategory.id(), null));
 
         // when & then
         assertThatThrownBy(() -> expenseTrackingCrudFacade.deleteCategory(addedCategory.id()))
@@ -206,7 +208,7 @@ class ExpenseTrackingCrudFacadeTest {
     void should_throw_exception_when_adding_expense_with_non_existent_category_id() {
         // given
         Long nonExistentCategoryId = 999L;
-        ExpenseRequestDto expenseRequestDto = new ExpenseRequestDto("Test Expense", "Description", 100.0, nonExistentCategoryId);
+        ExpenseRequestDto expenseRequestDto = new ExpenseRequestDto("Test Expense", "Description", 100.0, nonExistentCategoryId, null);
 
         // when & then
         assertThatThrownBy(() -> expenseTrackingCrudFacade.addExpense(expenseRequestDto))

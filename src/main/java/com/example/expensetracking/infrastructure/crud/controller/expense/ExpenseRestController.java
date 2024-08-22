@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -52,7 +53,7 @@ class ExpenseRestController {
     }
 
     @PostMapping()
-    @Operation(summary = "Create a new expense", description = "Creates a new expense")
+    @Operation(summary = "Create a new expense", description = "Creates a new expense with optional currency specification")
     @ApiResponse(responseCode = "200", description = "Successfully created the expense")
     ResponseEntity<CreateExpenseResponseDto> addExpense(@Valid @RequestBody ExpenseRequestDto request) {
         ExpenseResponseDto expenseResponseDto = expenseTrackingCrudFacade.addExpense(request);

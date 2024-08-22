@@ -18,6 +18,7 @@ public record ExpenseRequestDto(
         Double amount,
 
         @NotNull(message = "Category ID is required")
-        Long categoryId
+        Long categoryId,
+        String currency
 ) {
 }

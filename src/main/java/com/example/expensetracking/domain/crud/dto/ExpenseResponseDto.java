@@ -12,5 +12,6 @@ public record ExpenseResponseDto(
         Double amount,
         LocalDateTime date,
         Long categoryId,
-        String categoryName
+        String categoryName,
+        String currency
 ) {}

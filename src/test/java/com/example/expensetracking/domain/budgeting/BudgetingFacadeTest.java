@@ -81,7 +81,7 @@ class BudgetingFacadeTest {
         BudgetRequestDto budgetRequestDto = new BudgetRequestDto(fixedDate, fixedDate.plusDays(30), BigDecimal.valueOf(1000));
         BudgetResponseDto createdBudget = budgetingFacade.createBudget(budgetRequestDto);
 
-        ExpenseResponseDto expenseDto = new ExpenseResponseDto(1L, "Test Expense", "Description", 100.0, fixedDate.atStartOfDay(), 1L, "Category");
+        ExpenseResponseDto expenseDto = new ExpenseResponseDto(1L, "Test Expense", "Description", 100.0, fixedDate.atStartOfDay(), 1L, "Category", null);
         when(expenseTrackingCrudFacade.getExpenseById(1L)).thenReturn(expenseDto);
 
         // when

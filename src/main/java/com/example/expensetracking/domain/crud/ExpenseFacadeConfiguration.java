@@ -7,9 +7,10 @@ import org.springframework.context.annotation.Configuration;
 class ExpenseFacadeConfiguration {
 
     @Bean
-    ExpenseTrackingCrudFacade expenseFacade(ExpenseRepository expenseRepository, CategoryRepository categoryRepository) {
+    ExpenseTrackingCrudFacade expenseFacade(ExpenseRepository expenseRepository, CategoryRepository categoryRepository, CurrencyConvertable currencyConvertable) {
         ExpenseMapper expenseMapper = new ExpenseMapper();
-        ExpenseAdder expenseAdder = new ExpenseAdder(expenseRepository, expenseMapper, categoryRepository);
+        CurrencyConversionService currencyConversionService = new CurrencyConversionService(currencyConvertable);
+        ExpenseAdder expenseAdder = new ExpenseAdder(expenseRepository, expenseMapper, categoryRepository, currencyConversionService);
         ExpenseRetriever expenseRetriever = new ExpenseRetriever(expenseRepository, expenseMapper);
         ExpenseDeleter expenseDeleter = new ExpenseDeleter(expenseRepository);
         ExpenseUpdater expenseUpdater = new ExpenseUpdater(expenseRepository, expenseMapper, categoryRepository);

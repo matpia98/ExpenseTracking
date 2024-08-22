@@ -30,12 +30,14 @@ class Expense {
     private String description;
     @Column(name = "expense_date")
     private LocalDateTime date;
+    @Column(name = "currency", nullable = false)
+    private String currency;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
     private Category category;
 
     public Expense() {
-
+        this.currency = "PLN";
     }
 }

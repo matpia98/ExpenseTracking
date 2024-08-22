@@ -15,6 +15,7 @@ class ExpenseMapper {
                 .description(expenseRequestDto.description())
                 .amount(expenseRequestDto.amount())
                 .date(LocalDateTime.now())
+                .currency(expenseRequestDto.currency() != null ? expenseRequestDto.currency() : "PLN")
                 .build();
     }
 
@@ -27,6 +28,7 @@ class ExpenseMapper {
                 .date(expense.getDate())
                 .categoryId(expense.getCategory().getId())
                 .categoryName(expense.getCategory().getName())
+                .currency(expense.getCurrency())
                 .build();
     }
 }

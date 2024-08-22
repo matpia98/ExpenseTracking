@@ -38,8 +38,8 @@ class ReportingFacadeTest {
         LocalDate startOfWeek = LocalDate.of(2024, 8, 12);  // Monday
         LocalDate endOfWeek = LocalDate.of(2024, 8, 18);  // Sunday
         List<ExpenseResponseDto> mockExpenses = Arrays.asList(
-                new ExpenseResponseDto(1L, "Expense 1", "Description 1", 100.0, LocalDateTime.of(2024, 8, 15, 10, 0), 1L, "Category 1"),
-                new ExpenseResponseDto(2L, "Expense 2", "Description 2", 200.0, LocalDateTime.of(2024, 8, 16, 11, 0), 2L, "Category 2")
+                new ExpenseResponseDto(1L, "Expense 1", "Description 1", 100.0, LocalDateTime.of(2024, 8, 15, 10, 0), 1L, "Category 1", null),
+                new ExpenseResponseDto(2L, "Expense 2", "Description 2", 200.0, LocalDateTime.of(2024, 8, 16, 11, 0), 2L, "Category 2", null)
         );
         when(crudFacade.getExpensesBetweenDates(startOfWeek, endOfWeek)).thenReturn(mockExpenses);
 
@@ -62,9 +62,9 @@ class ReportingFacadeTest {
         LocalDate startOfMonth = LocalDate.of(2024, 8, 1);
         LocalDate endOfMonth = LocalDate.of(2024, 8, 31);
         List<ExpenseResponseDto> mockExpenses = Arrays.asList(
-                new ExpenseResponseDto(1L, "Expense 1", "Description 1", 100.0, LocalDateTime.of(2024, 8, 15, 10, 0), 1L, "Category 1"),
-                new ExpenseResponseDto(2L, "Expense 2", "Description 2", 200.0, LocalDateTime.of(2024, 8, 16, 11, 0), 2L, "Category 2"),
-                new ExpenseResponseDto(3L, "Expense 3", "Description 3", 300.0, LocalDateTime.of(2024, 8, 17, 12, 0), 1L, "Category 1")
+                new ExpenseResponseDto(1L, "Expense 1", "Description 1", 100.0, LocalDateTime.of(2024, 8, 15, 10, 0), 1L, "Category 1", null),
+                new ExpenseResponseDto(2L, "Expense 2", "Description 2", 200.0, LocalDateTime.of(2024, 8, 16, 11, 0), 2L, "Category 2", null),
+                new ExpenseResponseDto(3L, "Expense 3", "Description 3", 300.0, LocalDateTime.of(2024, 8, 17, 12, 0), 1L, "Category 1", null)
         );
         when(crudFacade.getExpensesBetweenDates(startOfMonth, endOfMonth)).thenReturn(mockExpenses);
 
@@ -85,8 +85,8 @@ class ReportingFacadeTest {
         LocalDate startDate = LocalDate.of(2024, 8, 1);
         LocalDate endDate = LocalDate.of(2024, 8, 15);
         List<ExpenseResponseDto> mockExpenses = Arrays.asList(
-                new ExpenseResponseDto(1L, "Expense 1", "Description 1", 100.0, LocalDateTime.of(2024, 8, 5, 10, 0), 1L, "Category 1"),
-                new ExpenseResponseDto(2L, "Expense 2", "Description 2", 200.0, LocalDateTime.of(2024, 8, 10, 11, 0),2L,"Category 2")
+                new ExpenseResponseDto(1L, "Expense 1", "Description 1", 100.0, LocalDateTime.of(2024, 8, 5, 10, 0), 1L, "Category 1", null),
+                new ExpenseResponseDto(2L, "Expense 2", "Description 2", 200.0, LocalDateTime.of(2024, 8, 10, 11, 0),2L,"Category 2", null)
         );
         when(crudFacade.getExpensesBetweenDates(startDate, endDate)).thenReturn(mockExpenses);
 

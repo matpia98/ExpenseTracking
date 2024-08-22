@@ -10,6 +10,7 @@ public record CreateExpenseResponseDto(
         double amount,
         String date,
         Long categoryId,
-        String categoryName
+        String categoryName,
+        String currency
 ) {
 }

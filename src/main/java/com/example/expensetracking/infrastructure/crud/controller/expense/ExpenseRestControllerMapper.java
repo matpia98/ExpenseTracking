@@ -33,6 +33,7 @@ class ExpenseRestControllerMapper {
                 .date(expenseResponseDto.date().toString())
                 .categoryId(expenseResponseDto.categoryId())
                 .categoryName(expenseResponseDto.categoryName())
+                .currency(expenseResponseDto.currency())
                 .build();
     }
 
