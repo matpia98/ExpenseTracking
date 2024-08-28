@@ -26,6 +26,11 @@ public class ExchangeRateClientConfig {
                 .build();
     }
 
+    public CurrencyConvertable exchangeRateRestTemplateClientTestConfig(RestTemplate restTemplate,
+                                                                        String uri, int port) {
+        return new ExchangeRateClient(restTemplate, uri, port);
+    }
+
     @Bean
     public CurrencyConvertable exchangeRateClient(RestTemplate restTemplate,
                                                   ExchangeRateClientConfigurationProperties properties) {

@@ -42,7 +42,7 @@ class ExchangeRateClient implements CurrencyConvertable {
             }
             log.info("Response body returned: " + body);
             return body;
-        } catch (ResourceAccessException e) {
+        } catch (ResourceAccessException | IllegalArgumentException e) {
             log.error("Error while fetching exchange rates: " + e.getMessage());
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR);
         }
